@@ -19,6 +19,7 @@ CRADDOCK_CLUSTER_SIZES = [
     350,400,450,500,550,600,650,700,750,800,850,900,950
 ]
 
+
 def __get_data_folder_path():
     return os.path.join(Path(__file__).parent.parent.parent, 'data')
 
