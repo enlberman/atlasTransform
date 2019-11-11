@@ -18,7 +18,7 @@ from niworkflows.interfaces.bids import (
 from ..workflows.datasink import init_datasink_wf
 from ..utils.bids import collect_data, BIDSPlusDataGrabber
 
-from ..workflows.exampleWorkflow import init_dfa_workflow
+from ..workflows.atlasTransformWorkflow import init_atlas_transform_workflow
 
 from ..interfaces import SubjectSummary, AboutSummary, DerivativesDataSink
 from ..__about__ import __version__
@@ -151,7 +151,7 @@ def init_single_subject_wf(
             workflow.get_node(node).interface.out_path_base = 'atlasTransform'
 
     for i in range(len(subject_data['bold'])):
-        dfa_wf = init_dfa_workflow(
+        dfa_wf = init_atlas_transform_workflow(
             bold=subject_data['bold'][i],
             brainmask=subject_data['mask'][i] if subject_data.keys().__contains__('mask')else None,
             csv=subject_data['csv'][i] if subject_data.keys().__contains__('csv') else None,
