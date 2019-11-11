@@ -9,7 +9,7 @@ from ..interfaces import AtlasTransform
 def init_atlas_transform_workflow(nifti, atlas_name, options, name='atlas_transform_wf'):
 
     workflow = Workflow(name=name)
-    desc = """Fractal Scaling via Detrended Fluctuation Analysis
+    desc = """Transformation to atlas space
     : """
 
     inputnode = pe.Node(
