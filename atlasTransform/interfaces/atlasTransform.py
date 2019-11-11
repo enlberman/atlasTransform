@@ -31,23 +31,25 @@ class AtlasTransformOutputSpec(TraitedSpec):
     confidence_intervals = File(exists=False, desc='confidence interval file')
 
 
-def _bold_native_masked_derivative(bold_img, mask_img, derivative_data, out_file):
-    from nilearn.image import index_img
-    bold_template = index_img(bold_img, 0)
-    template_data = bold_template.get_data()
-    mask = mask_img.get_data() == 1
-    template_data[~mask] = 0
-    template_data[mask] = derivative_data
-    bold_template.__class__(template_data, bold_template.affine, bold_template.header).to_filename(out_file)
+def _roi_mean(img_list_atlas_space, atlas_data, j):
+    """
+    Average all the data in an roi.
+    """
+    return [
+        (img_list_atlas_space[i].get_data() * (atlas_data == j)).mean()
+        for i in range(len(img_list_atlas_space))
+    ]
 
 
-def _reslice_to_atlas(atlas, img_3d):
-    return nilearn.image.resample_img(img_3d, atlas.affine, atlas.shape)
-
-
-def _roi_ts(img_list_atlas_space, atlas_data, j):
-    return [(img_list_atlas_space[i].get_data() * (atlas_data == j)).mean() for i in
-            range(len(img_list_atlas_space))]
+def _roi_error_propagation(img_list_atlas_space, atlas_data, j):
+    """
+    If X = sum(x_i)/n, i = 1,...,n
+    then dX = sqrt(sum(dx_i**2))/n, i=1,...,n
+    """
+    return [
+        numpy.sqrt(numpy.power(img_list_atlas_space[i].get_data() * (atlas_data == j), 2.0).sum()) / float(sum(atlas_data == j))
+        for i in range(len(img_list_atlas_space))
+    ]
 
 
 class AtlasTransform(SimpleInterface):
@@ -58,6 +60,7 @@ class AtlasTransform(SimpleInterface):
     output_spec = AtlasTransformOutputSpec
 
     def _run_interface(self, runtime):
+        """Load the atlas and make the atlas name for the output file"""
         if self.inputs.atlas_name == 'shen':
             atlas = load_shen_268(resolution=self.inputs.resolution)
             atlas_name = self.inputs.atlas_name
@@ -72,27 +75,28 @@ class AtlasTransform(SimpleInterface):
             raise RuntimeError("Atlas name %s not recognized" % self.inputs.atlas_name)
 
         source_img = nibabel.load(self.inputs.nifti)
-        source_dimensions = len(source_img.shape)
-        target_affine = source_img.affine
+        source_dimensions = len(source_img.shape)  # 4D or 3D
 
         if source_dimensions == 4:
-            source_img = nibabel.four_to_three(source_img)
-            target_affine = source_img[0].affine
+            source_img = nibabel.four_to_three(source_img)  # split the 4D image into a list of 3D volumes
         else:
             source_img = [source_img]
 
-        atlas = nilearn.image.resample_img(atlas, target_affine=target_affine, interpolation='nearest')
-        atlas_data = atlas.get_data()
-        atlas_labels = numpy.unique(atlas_data).astype('int16')
+        target_affine = source_img[0].affine  # we need the affine from any of the 3d volumes
 
-        rois = partial(_roi_ts, source_img, atlas_data)
-        timeseries_roi_data = [rois(i) for i in atlas_labels]
+        atlas = nilearn.image.resample_img(atlas, target_affine=target_affine, interpolation='nearest')  # resample with nearest neighbor in case the atlas has a different resolution
+        atlas_data = atlas.get_data()
+        atlas_labels = numpy.unique(atlas_data).astype('int16')  # these need to be integers so we can use them to index matrices below
+
+        rois = partial(_roi_mean, source_img, atlas_data)  # a closure of the _roi_ts function
+        roi_data = [rois(i) for i in atlas_labels]  # average data in each roi
+
         suffix = "_%s.csv" % atlas_name
         if source_dimensions == 4:
-            suffix = suffix.replace('.csv', 'ts.csv')
+            suffix = suffix.replace('.csv', 'ts.csv')  # 4D images get the ts suffix for time-series
 
         out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, newpath=os.getcwd(), use_ext=False)
-        numpy.savetxt(out_file, numpy.vstack(timeseries_roi_data), delimiter=',')
+        numpy.savetxt(out_file, numpy.vstack(roi_data), delimiter=',')
 
         self._results['transformed'] = out_file
 
