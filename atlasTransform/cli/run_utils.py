@@ -6,6 +6,7 @@ import gc
 import warnings
 from argparse import ArgumentParser
 from argparse import ArgumentDefaultsHelpFormatter
+from ..utils.atlas import CRADDOCK_CLUSTER_SIZES
 
 
 def _warn_redirect(message, category, filename, lineno, logger, file=None, line=None):
@@ -49,22 +50,22 @@ def get_parser():
     parser.add_argument('analysis_level', choices=['participant'],
                         help='processing stage to be run, only "participant" in the case of '
                              'atlasTransform (see BIDS-Apps specification).')
-    parser.add_argument('source_format', choices=['bold', 'csv'],
+    parser.add_argument('atlas_name', choices=['craddock', 'shen'],
                         help='Which file format is the time series data coming from?')
     # optional arguments
+    parser.add_argument('--resolution', choices=[1, 2],
+                        help='shen atlas resolution',
+                        action='store', type=int, default=1)
+    parser.add_argument('--number_of_clusters', choices=CRADDOCK_CLUSTER_SIZES,
+                        help='craddock atlas granularity',
+                        action='store', type=int, default=200)
     parser.add_argument('--version', action='version', version=verstr)
 
-    parser.add_argument('--algorithm', action='store', choices=['dfa'],
-                        help='which fractal scaling algorithm to run')
+    parser.add_argument('--algorithm', action='store', choices=['2level', 'mean', None],
+                        help='which craddock algorithm to use', default='2level')
 
-    parser.add_argument('--minimum_frequency', action='store', type=float, default=0.01, required=False,
-                        help='minimim frequency')
-
-    parser.add_argument('--maximum_frequency', action='store', type=float, default=0.1, required=False,
-                        help='maximum frequency')
-
-    parser.add_argument('--skip_vols', action='store', type=int, default=5, required=False,
-                        help='number of volumes to drop')
+    parser.add_argument('--similarity_measure', action='store', choices=['t','s'],
+                        help='which craddock similarity measure to use', default='t')
 
     g_bids = parser.add_argument_group('Options for filtering BIDS queries')
     g_bids.add_argument('--skip_bids_validation', '--skip-bids-validation', action='store_true',
@@ -93,19 +94,6 @@ def get_parser():
     g_perfm.add_argument("-v", "--verbose", dest="verbose_count", action="count", default=0,
                          help="increases log verbosity for each occurence, debug level is -vvv")
     g_conf = parser.add_argument_group('Workflow configuration')
-    # g_conf.add_argument(
-    #     '--ignore', required=False, action='store', nargs="+", default=[],
-    #     choices=['fieldmaps', 'slicetiming', 'sbref'],
-    #     help='ignore selected aspects of the input dataset to disable corresponding '
-    #          'parts of the workflow (a space delimited list)')
-    g_conf.add_argument(
-        '--output-format', required=False, action='store', type=str, nargs='+',
-        choices=['nifti', 'csv', 'mat', 'hdf5', 'pkl', 'npy'],
-        help='choose an output format. defaults to whatever the input file format is.'
-    )
-    g_conf.add_argument(
-        '--dummy-scans', required=False, action='store', default=None, type=int,
-        help='Number of timepoints to drop.')
 
     g_other = parser.add_argument_group('Other options')
     g_other.add_argument('-w', '--work-dir', action='store', type=Path, default=Path('work'),
