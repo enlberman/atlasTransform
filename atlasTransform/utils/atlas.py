@@ -21,7 +21,7 @@ CRADDOCK_CLUSTER_SIZES = [
 
 
 def __get_data_folder_path():
-    return os.path.join(Path(__file__).parent.parent.parent, 'data')
+    return os.path.join(Path(__file__).parent.parent, 'data')
 
 
 def load_shen_268(resolution: int) -> nibabel.Nifti1Image:
