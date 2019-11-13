@@ -74,14 +74,7 @@ def init_single_subject_wf(
             'bold': ['/completely/made/up/path/sub-01_task-nback_bold.nii.gz']
         }
     else:
-        subject_data = collect_data(layout, subject_id, opts.source_format)[0]
-
-    if not subject_data[opts.source_format]:
-        raise Exception("No {data_format}. data found for participant {participant}. "
-                        "All workflows require time series data.".format(
-            data_format=opts.source_format,
-            participant=subject_id)
-        )
+        subject_data = collect_data(layout, subject_id, None)[0]
 
     workflow = Workflow(name=name)
     workflow.base_dir = work_dir
@@ -107,8 +100,8 @@ def init_single_subject_wf(
     inputnode = pe.Node(niu.IdentityInterface(fields=['subjects_dir']),
                         name='inputnode')
 
-    require_masks = opts.source_format == 'bold'
-    bidssrc = pe.Node(BIDSPlusDataGrabber(subject_data=subject_data, require_masks=require_masks),
+    # require_masks = opts.source_format == 'bold'
+    bidssrc = pe.Node(BIDSPlusDataGrabber(subject_data=subject_data, require_masks=False),
                       name='bidssrc')
 
     bids_info = pe.Node(BIDSInfo(
