@@ -84,6 +84,7 @@ def init_single_subject_wf(
         )
 
     workflow = Workflow(name=name)
+    workflow.base_dir = work_dir
     workflow.__desc__ = """
     Results included in this manuscript come from processing
     performed using *atlasTransform* {atlasTransform_ver}
@@ -151,28 +152,23 @@ def init_single_subject_wf(
             workflow.get_node(node).interface.out_path_base = 'atlasTransform'
 
     for i in range(len(subject_data['bold'])):
-        dfa_wf = init_atlas_transform_workflow(
-            bold=subject_data['bold'][i],
-            brainmask=subject_data['mask'][i] if subject_data.keys().__contains__('mask')else None,
-            csv=subject_data['csv'][i] if subject_data.keys().__contains__('csv') else None,
-            min_freq=opts.minimum_frequency,
-            max_freq=opts.maximum_frequency,
-            drop_vols=opts.skip_vols,
-            name='dfa_%d_wf' % i
+        transform_wf = init_atlas_transform_workflow(
+            nifti=subject_data['bold'][i],
+            atlas_name=opts.atlas_name,
+            options=opts,
+            name='atlas_transform_%d_wf' % i
         )
         workflow.connect([
-            (inputnode, dfa_wf, [('subjects_dir', 'inputnode.subjects_dir')]),
+            (inputnode, transform_wf, [('subjects_dir', 'inputnode.subjects_dir')]),
         ])
 
         outputs_wf = init_datasink_wf(bids_root=str(layout.root), output_dir=str(opts.output_dir), name='ds_%d_wf' % i)
 
-        workflow.connect([(dfa_wf,outputs_wf,[('inputnode.bold','inputnode.source_file')])])
+        workflow.connect([(transform_wf,outputs_wf,[('inputnode.bold','inputnode.source_file')])])
         # outputs_wf.inputs.source_file = subject_data['csv'][i] if subject_data.__contains__('mask') else subject_data['bold'][i]
 
-        workflow.connect([(dfa_wf, outputs_wf, [
-            ('outputnode.hurst', 'inputnode.dfa_h'),
-            ('outputnode.rsquared', 'inputnode.dfa_ci'),
-            ('outputnode.confidence_intervals', 'inputnode.dfa_rsquared')
+        workflow.connect([(transform_wf, outputs_wf, [
+            ('outputnode.transformed', 'inputnode.transformed')
         ])])
 
     return workflow
