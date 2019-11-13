@@ -14,4 +14,5 @@ if __name__ == '__main__':
     setup(name="atlasTransform",
           version=versioneer.get_version(),
           cmdclass=versioneer.get_cmdclass(),
-          setup_requires=SETUP_REQUIRES, install_requires=['smriprep', 'packaging', 'bids'])
+          setup_requires=SETUP_REQUIRES, install_requires=['smriprep', 'packaging', 'bids'],
+          include_package_data=True)
