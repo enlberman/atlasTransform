@@ -157,7 +157,7 @@ def init_single_subject_wf(
 
         outputs_wf = init_datasink_wf(bids_root=str(layout.root), output_dir=str(opts.output_dir), atlas_name=opts.atlas_name, name='ds_%d_wf' % i)
 
-        workflow.connect([(transform_wf,outputs_wf,[('inputnode.bold','inputnode.source_file')])])
+        workflow.connect([(transform_wf,outputs_wf,[('inputnode.nifti','inputnode.source_file')])])
         # outputs_wf.inputs.source_file = subject_data['csv'][i] if subject_data.__contains__('mask') else subject_data['bold'][i]
 
         workflow.connect([(transform_wf, outputs_wf, [
