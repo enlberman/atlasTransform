@@ -1,3 +1,2 @@
 include versioneer.py
 include atlasTransform/_version.py
-include data/*
