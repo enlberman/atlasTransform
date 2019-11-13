@@ -104,8 +104,8 @@ def init_single_subject_wf(
     bidssrc = pe.Node(BIDSPlusDataGrabber(subject_data=subject_data, require_masks=False),
                       name='bidssrc')
 
-    bids_info = pe.Node(BIDSInfo(
-        bids_dir=layout.root, bids_validate=False), name='bids_info')
+    # bids_info = pe.Node(BIDSInfo(
+    #     bids_dir=layout.root, bids_validate=False), name='bids_info')
 
     summary = pe.Node(SubjectSummary(),
         name='summary', run_without_submitting=True)
@@ -127,14 +127,14 @@ def init_single_subject_wf(
     # Preprocessing of T1w (includes registration to MNI)
 
     workflow.connect([
-        (bidssrc, bids_info, [('bold', 'in_file')]),
+        # (bidssrc, bids_info, [('bold', 'in_file')]),
         (inputnode, summary, [('subjects_dir', 'subjects_dir')]),
         (bidssrc, summary, [('t1w', 't1w'),
                             ('t2w', 't2w'),
                             ('bold', 'bold')]),
-        (bids_info, summary, [('subject', 'subject_id')]),
+        # (bids_info, summary, [('subject', 'subject_id')]),
         (bidssrc, ds_report_summary, [('bold', 'source_file')]),
-        (summary, ds_report_summary, [('out_report', 'in_file')]),
+        # (summary, ds_report_summary, [('out_report', 'in_file')]),
         (bidssrc, ds_report_about, [('bold', 'source_file')]),
         (about, ds_report_about, [('out_report', 'in_file')]),
     ])
