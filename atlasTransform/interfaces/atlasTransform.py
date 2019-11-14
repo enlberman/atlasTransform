@@ -7,7 +7,7 @@ from nipype.interfaces.base import (
 from nipype import logging
 from python_fractal_scaling.dfa import dfa
 import pandas
-from ..interfaces import DerivativesDataSink, out_path_base
+from ..interfaces import out_path_base
 import numpy
 import nibabel
 import nilearn
