@@ -149,6 +149,7 @@ def init_single_subject_wf(
             nifti=subject_data['bold'][i],
             atlas_name=opts.atlas_name,
             options=opts,
+            bids_dir=str(layout.root),
             name='atlas_transform_%d_wf' % i
         )
         # workflow.connect([

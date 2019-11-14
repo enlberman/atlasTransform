@@ -6,17 +6,18 @@ from niworkflows.engine.workflows import LiterateWorkflow as Workflow
 from ..interfaces import AtlasTransform
 
 
-def init_atlas_transform_workflow(nifti, atlas_name, options, name='atlas_transform_wf'):
+def init_atlas_transform_workflow(nifti, atlas_name, options, bids_dir,name='atlas_transform_wf'):
 
     workflow = Workflow(name=name)
     desc = """Transformation to atlas space
     : """
 
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['nifti','atlas_name', 'resolution', 'number_of_clusters', 'similarity_measure', 'algorithm']),
+        niu.IdentityInterface(fields=['nifti','atlas_name', 'resolution', 'number_of_clusters', 'similarity_measure', 'algorithm', 'bids_dir']),
         name='inputnode')
 
     inputnode.inputs.nifti = nifti
+    inputnode.inputs.bids_dir = bids_dir
     inputnode.inputs.atlas_name = atlas_name
     inputnode.inputs.resolution = options.resolution
     inputnode.inputs.number_of_clusters = options.number_of_clusters
@@ -31,6 +32,7 @@ def init_atlas_transform_workflow(nifti, atlas_name, options, name='atlas_transf
 
     workflow.connect([
         (inputnode, transformNode, [('nifti', 'nifti')]),
+        (inputnode, transformNode, [('bids_dir', 'bids_dir')]),
         (inputnode, transformNode, [('atlas_name', 'atlas_name')]),
         (inputnode, transformNode, [('resolution', 'resolution')]),
         (inputnode, transformNode, [('number_of_clusters', 'number_of_clusters')]),
