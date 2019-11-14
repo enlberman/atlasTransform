@@ -1,3 +1,4 @@
 include versioneer.py
 include atlasTransform/_version.py
-recursive-include atlasTransform/data/*/*.nii.gz
+include atlasTransform/data/craddock_2011/*.nii.gz
+include atlasTransform/data/shen_268/*.nii.gz
