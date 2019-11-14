@@ -169,6 +169,19 @@ def collect_data(layout: BIDSLayout, subject_id, other_format: str = None):
     confounds = [file.split('space')[0] + 'desc-confounds_regressors.tsv' for file in standard_search['bold']]
     standard_search['confounds'] = confounds
 
+    print()
+    print()
+    print()
+    print()
+    print()
+    print(layout.session)
+    print(layout.root)
+    print(layout.files)
+    print()
+    print()
+    print()
+    print()
+    print()
     hurst = glob.glob(os.path.join(str(layout.session),'func','*hurst.nii.gz'))
     standard_search['hurst'] = hurst
 
