@@ -169,17 +169,6 @@ def collect_data(layout: BIDSLayout, subject_id, other_format: str = None):
     confounds = [file.split('space')[0] + 'desc-confounds_regressors.tsv' for file in standard_search['bold']]
     standard_search['confounds'] = confounds
 
-    print()
-    print()
-    print()
-    print()
-    print()
-    print(list(filter(lambda f: f.__contains__('hurst.nii.gz'),layout.files)))
-    print()
-    print()
-    print()
-    print()
-    print()
     hurst = list(filter(lambda f: f.__contains__('hurst.nii.gz'),layout.files))
     standard_search['hurst'] = hurst
 

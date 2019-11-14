@@ -38,7 +38,7 @@ def _roi_mean(img_list_atlas_space, atlas_data, j):
     Average all the data in an roi.
     """
     return [
-        (img_list_atlas_space[i].get_data() * (atlas_data == j)).mean()
+        (img_list_atlas_space[i].get_data() * (atlas_data == j)).sum() / (atlas_data == j).sum()
         for i in range(len(img_list_atlas_space))
     ]
 
