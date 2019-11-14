@@ -99,45 +99,45 @@ def init_single_subject_wf(
 
     inputnode = pe.Node(niu.IdentityInterface(fields=['subjects_dir']),
                         name='inputnode')
-
-    # require_masks = opts.source_format == 'bold'
-    bidssrc = pe.Node(BIDSPlusDataGrabber(subject_data=subject_data, require_masks=False),
-                      name='bidssrc')
-
-    # bids_info = pe.Node(BIDSInfo(
-    #     bids_dir=layout.root, bids_validate=False), name='bids_info')
-
-    summary = pe.Node(SubjectSummary(),
-        name='summary', run_without_submitting=True)
-
-    about = pe.Node(AboutSummary(version=__version__,
-                                 command=' '.join(sys.argv)),
-                    name='about', run_without_submitting=True)
-
-    ds_report_summary = pe.Node(
-        DerivativesDataSink(base_directory=reportlets_dir,
-                            desc='summary', keep_dtype=True),
-        name='ds_report_summary', run_without_submitting=True)
-
-    ds_report_about = pe.Node(
-        DerivativesDataSink(base_directory=reportlets_dir,
-                            desc='about', keep_dtype=True),
-        name='ds_report_about', run_without_submitting=True)
+    #
+    # # require_masks = opts.source_format == 'bold'
+    # bidssrc = pe.Node(BIDSPlusDataGrabber(subject_data=subject_data, require_masks=False),
+    #                   name='bidssrc')
+    #
+    # # bids_info = pe.Node(BIDSInfo(
+    # #     bids_dir=layout.root, bids_validate=False), name='bids_info')
+    #
+    # summary = pe.Node(SubjectSummary(),
+    #     name='summary', run_without_submitting=True)
+    #
+    # about = pe.Node(AboutSummary(version=__version__,
+    #                              command=' '.join(sys.argv)),
+    #                 name='about', run_without_submitting=True)
+    #
+    # ds_report_summary = pe.Node(
+    #     DerivativesDataSink(base_directory=reportlets_dir,
+    #                         desc='summary', keep_dtype=True),
+    #     name='ds_report_summary', run_without_submitting=True)
+    #
+    # ds_report_about = pe.Node(
+    #     DerivativesDataSink(base_directory=reportlets_dir,
+    #                         desc='about', keep_dtype=True),
+    #     name='ds_report_about', run_without_submitting=True)
 
     # Preprocessing of T1w (includes registration to MNI)
 
-    workflow.connect([
-        # (bidssrc, bids_info, [('bold', 'in_file')]),
-        (inputnode, summary, [('subjects_dir', 'subjects_dir')]),
-        (bidssrc, summary, [('t1w', 't1w'),
-                            ('t2w', 't2w'),
-                            ('bold', 'bold')]),
-        # (bids_info, summary, [('subject', 'subject_id')]),
-        (bidssrc, ds_report_summary, [('bold', 'source_file')]),
-        # (summary, ds_report_summary, [('out_report', 'in_file')]),
-        (bidssrc, ds_report_about, [('bold', 'source_file')]),
-        (about, ds_report_about, [('out_report', 'in_file')]),
-    ])
+    # workflow.connect([
+    #     # (bidssrc, bids_info, [('bold', 'in_file')]),
+    #     (inputnode, summary, [('subjects_dir', 'subjects_dir')]),
+    #     (bidssrc, summary, [('t1w', 't1w'),
+    #                         ('t2w', 't2w'),
+    #                         ('bold', 'bold')]),
+    #     # (bids_info, summary, [('subject', 'subject_id')]),
+    #     (bidssrc, ds_report_summary, [('bold', 'source_file')]),
+    #     # (summary, ds_report_summary, [('out_report', 'in_file')]),
+    #     (bidssrc, ds_report_about, [('bold', 'source_file')]),
+    #     (about, ds_report_about, [('out_report', 'in_file')]),
+    # ])
 
     # Overwrite ``out_path_base`` of smriprep's DataSinks
     for node in workflow.list_node_names():

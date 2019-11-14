@@ -94,7 +94,7 @@ class AtlasTransform(SimpleInterface):
 
         suffix = "_%s.csv" % atlas_name
         if source_dimensions == 4:
-            suffix = suffix.replace('.csv', 'ts.csv')  # 4D images get the ts suffix for time-series
+            suffix = suffix.replace('.csv', '_ts.csv')  # 4D images get the ts suffix for time-series
 
         out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, newpath=os.getcwd(), use_ext=False)
         numpy.savetxt(out_file, numpy.vstack(roi_data), delimiter=',')
