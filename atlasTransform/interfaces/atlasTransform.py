@@ -1,4 +1,5 @@
 from functools import partial
+from pathlib import Path
 
 from nipype.interfaces.base import (
     traits, TraitedSpec, BaseInterfaceInputSpec, SimpleInterface,
