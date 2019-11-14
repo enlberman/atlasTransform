@@ -144,9 +144,9 @@ def init_single_subject_wf(
         if node.split('.')[-1].startswith('ds_'):
             workflow.get_node(node).interface.out_path_base = 'atlasTransform'
 
-    for i in range(len(subject_data['bold'])):
+    for i in range(len(subject_data[opts.source])):
         transform_wf = init_atlas_transform_workflow(
-            nifti=subject_data['bold'][i],
+            nifti=subject_data[opts.source][i],
             atlas_name=opts.atlas_name,
             options=opts,
             bids_dir=str(layout.root),

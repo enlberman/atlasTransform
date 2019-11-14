@@ -6,6 +6,7 @@
 Utilities to handle BIDS inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 """
+import glob
 import os
 import sys
 import json
@@ -167,6 +168,9 @@ def collect_data(layout: BIDSLayout, subject_id, other_format: str = None):
 
     confounds = [file.split('space')[0] + 'desc-confounds_regressors.tsv' for file in standard_search['bold']]
     standard_search['confounds'] = confounds
+
+    hurst = glob.glob(os.path.join(str(layout.session),'func','*hurst.nii.gz'))
+    standard_search['hurst'] = hurst
 
     return standard_search, layout
 

@@ -56,6 +56,9 @@ def get_parser():
     parser.add_argument('--resolution', choices=[1, 2],
                         help='shen atlas resolution',
                         action='store', type=int, default=1)
+    parser.add_argument('--source', choices=["bold", "hurst"],
+                        help='what type of file',
+                        action='store', type=str, default="bold")
     parser.add_argument('--number_of_clusters', choices=CRADDOCK_CLUSTER_SIZES,
                         help='craddock atlas granularity',
                         action='store', type=int, default=200)
