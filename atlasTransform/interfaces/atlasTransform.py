@@ -104,7 +104,7 @@ class AtlasTransform(SimpleInterface):
         print()
         print()
         print()
-        print(fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir)).stem,  __name__.split('.')[0])
+        print(fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir).stem,  __name__.split('.')[0]))
         print()
         print()
         print()
