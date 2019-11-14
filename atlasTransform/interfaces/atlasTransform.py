@@ -7,7 +7,6 @@ from nipype.interfaces.base import (
 from nipype import logging
 from python_fractal_scaling.dfa import dfa
 import pandas
-from ..interfaces import out_path_base
 import numpy
 import nibabel
 import nilearn
@@ -105,7 +104,7 @@ class AtlasTransform(SimpleInterface):
         print()
         print()
         print()
-        print(fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir)).stem, out_path_base())
+        print(fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir)).stem,  __name__.split('.')[0])
         print()
         print()
         print()
