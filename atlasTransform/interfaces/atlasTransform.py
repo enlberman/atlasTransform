@@ -98,18 +98,8 @@ class AtlasTransform(SimpleInterface):
         if source_dimensions == 4:
             suffix = suffix.replace('.csv', '_ts.csv')  # 4D images get the ts suffix for time-series
 
-        out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, newpath=os.getcwd(), use_ext=False)
-        print()
-        print()
-        print()
-        print()
-        print()
-        print(fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir).stem,  __name__.split('.')[0]))
-        print()
-        print()
-        print()
-        print()
-        print()
+        out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir).stem,  __name__.split('.')[0])
+        os.makedirs(Path(out_file).parent, exist_ok=True)
         numpy.savetxt(out_file, numpy.vstack(roi_data).T, delimiter=',')
 
         self._results['transformed'] = out_file
