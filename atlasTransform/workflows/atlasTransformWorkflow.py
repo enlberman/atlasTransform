@@ -13,7 +13,7 @@ def init_atlas_transform_workflow(nifti, atlas_name, options, bids_dir,name='atl
     : """
 
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['nifti','atlas_name', 'resolution', 'number_of_clusters', 'similarity_measure', 'algorithm', 'bids_dir']),
+        niu.IdentityInterface(fields=['nifti','atlas_name', 'resolution', 'number_of_clusters', 'similarity_measure', 'algorithm', 'bids_dir', 'subjects_dir']),
         name='inputnode')
 
     inputnode.inputs.nifti = nifti
