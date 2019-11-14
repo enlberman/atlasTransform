@@ -6,6 +6,7 @@ from nipype.interfaces.base import (
 from nipype import logging
 from python_fractal_scaling.dfa import dfa
 import pandas
+from ..interfaces import DerivativesDataSink, out_path_base
 import numpy
 import nibabel
 import nilearn
@@ -18,7 +19,8 @@ LOGGER = logging.getLogger('nipype.interface')
 
 class AtlasTransformInputSpec(TraitedSpec):
     nifti = traits.File(mandatory=True, desc='input nifti')
-    atlas_name = traits.String(mandatory=True, desc='atlas nam')
+    atlas_name = traits.String(mandatory=True, desc='atlas name')
+    bids_dir = traits.String(mandatory=True, desc='atlas name')
     resolution = traits.Int(mandatory=False, desc='resolution (for shen atlas)')
     number_of_clusters = traits.Int(mandatory=False, desc='for craddock')
     similarity_measure = traits.String(mandatory=False, desc='for craddock')
@@ -97,6 +99,17 @@ class AtlasTransform(SimpleInterface):
             suffix = suffix.replace('.csv', '_ts.csv')  # 4D images get the ts suffix for time-series
 
         out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, newpath=os.getcwd(), use_ext=False)
+        print()
+        print()
+        print()
+        print()
+        print()
+        print(fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir)).stem, out_path_base())
+        print()
+        print()
+        print()
+        print()
+        print()
         numpy.savetxt(out_file, numpy.vstack(roi_data).T, delimiter=',')
 
         self._results['transformed'] = out_file

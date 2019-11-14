@@ -9,9 +9,11 @@ from niworkflows.interfaces import (
 from .reports import SubjectSummary, AboutSummary
 from .atlasTransform import AtlasTransform
 
+out_path_base =  __name__.split('.')[0]
+
 
 class DerivativesDataSink(bids.DerivativesDataSink):
-    out_path_base =  __name__.split('.')[0]
+    out_path_base = __name__.split('.')[0]
 
 
 __all__ = [
