@@ -19,10 +19,6 @@ def init_datasink_wf(bids_root: str, output_dir: str, atlas_name: str, name='dat
     raw_sources = pe.Node(niu.Function(function=_bids_relative), name='raw_sources')
     raw_sources.inputs.bids_root = bids_root
 
-    suffix = "_%s.csv" % atlas_name
-    if source_dimensions == 4:
-        suffix = suffix.replace('.csv', '_ts.csv')  # 4D images get the ts suffix for time-series
-
     ds_transform = pe.Node(DerivativesDataSink(
         base_directory=output_dir),
         name="ds_transform", run_without_submitting=True,
