@@ -174,15 +174,13 @@ def collect_data(layout: BIDSLayout, subject_id, other_format: str = None):
     print()
     print()
     print()
-    print(layout.session)
-    print(layout.root)
-    print(layout.files)
+    print(list(filter(lambda f: f.__contains__('hurst.nii.gz'),layout.files)))
     print()
     print()
     print()
     print()
     print()
-    hurst = glob.glob(os.path.join(str(layout.session),'func','*hurst.nii.gz'))
+    hurst = list(filter(lambda f: f.__contains__('hurst.nii.gz'),layout.files))
     standard_search['hurst'] = hurst
 
     return standard_search, layout
