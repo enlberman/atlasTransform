@@ -25,7 +25,7 @@ def init_datasink_wf(bids_root: str, output_dir: str, atlas_name: str, name='dat
         mem_gb=DEFAULT_MEMORY_MIN_GB)
     workflow.connect([
         (inputnode, raw_sources, [('source_file', 'in_files')]),
-        (inputnode, ds_transform, [('transformed', 'source_file'),
+        (inputnode, ds_transform, [('source_file', 'source_file'),
                                    ('transformed', 'in_file'),
                                ])
     ])
