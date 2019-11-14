@@ -83,8 +83,9 @@ class AtlasTransform(SimpleInterface):
             source_img = [source_img]
 
         target_affine = source_img[0].affine  # we need the affine from any of the 3d volumes
+        target_shape = source_img[0].shape  # we need the affine from any of the 3d volumes
 
-        atlas = nilearn.image.resample_img(atlas, target_affine=target_affine, interpolation='nearest')  # resample with nearest neighbor in case the atlas has a different resolution
+        atlas = nilearn.image.resample_img(atlas, target_affine=target_affine, target_shape=target_shape, interpolation='nearest')  # resample with nearest neighbor in case the atlas has a different resolution
         atlas_data = atlas.get_data()
         atlas_labels = numpy.unique(atlas_data).astype('int16')  # these need to be integers so we can use them to index matrices below
 
