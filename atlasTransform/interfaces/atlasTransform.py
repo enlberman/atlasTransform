@@ -18,7 +18,7 @@ LOGGER = logging.getLogger('nipype.interface')
 
 
 class AtlasTransformInputSpec(TraitedSpec):
-    nifti = traits.File(mandatory=True, desc='input nifti')
+    nifti = traits.Any(mandatory=True, desc='input nifti')
     atlas_name = traits.String(mandatory=True, desc='atlas name')
     bids_dir = traits.String(mandatory=True, desc='atlas name')
     resolution = traits.Int(mandatory=False, desc='resolution (for shen atlas)')
@@ -76,6 +76,8 @@ class AtlasTransform(SimpleInterface):
         else:
             raise RuntimeError("Atlas name %s not recognized" % self.inputs.atlas_name)
 
+        if type(self.inputs.nifti) == list:
+            self.inputs.nifti = self.inputs.nifti[0]
         source_img = nibabel.load(self.inputs.nifti)
         source_dimensions = len(source_img.shape)  # 4D or 3D
 
