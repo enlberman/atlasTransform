@@ -10,6 +10,7 @@ import pandas
 import numpy
 import nibabel
 import nilearn
+import nilearn.input_data
 import os
 from nipype.utils.filemanip import fname_presuffix
 from ..utils.atlas import load_craddock_2011, load_shen_268
@@ -81,20 +82,8 @@ class AtlasTransform(SimpleInterface):
         source_img = nibabel.load(self.inputs.nifti)
         source_dimensions = len(source_img.shape)  # 4D or 3D
 
-        if source_dimensions == 4:
-            source_img = nibabel.four_to_three(source_img)  # split the 4D image into a list of 3D volumes
-        else:
-            source_img = [source_img]
-
-        target_affine = source_img[0].affine  # we need the affine from any of the 3d volumes
-        target_shape = source_img[0].shape  # we need the affine from any of the 3d volumes
-
-        atlas = nilearn.image.resample_img(atlas, target_affine=target_affine, target_shape=target_shape, interpolation='nearest')  # resample with nearest neighbor in case the atlas has a different resolution
-        atlas_data = atlas.get_data()
-        atlas_labels = numpy.unique(atlas_data).astype('int16')  # these need to be integers so we can use them to index matrices below
-
-        rois = partial(_roi_mean, source_img, atlas_data)  # a closure of the _roi_ts function
-        roi_data = [rois(i) for i in atlas_labels]  # average data in each roi
+        masker = nilearn.input_data.NiftiLabelsMasker(atlas)
+        roi_data = masker.fit_transform(source_img)
 
         suffix = "_%s.csv" % atlas_name
         if source_dimensions == 4:
@@ -102,7 +91,7 @@ class AtlasTransform(SimpleInterface):
 
         out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir).stem,  __name__.split('.')[0])
         os.makedirs(Path(out_file).parent, exist_ok=True)
-        numpy.savetxt(out_file, numpy.vstack(roi_data).T, delimiter=',')
+        numpy.savetxt(out_file, roi_data, delimiter=',')
 
         self._results['transformed'] = out_file
 
