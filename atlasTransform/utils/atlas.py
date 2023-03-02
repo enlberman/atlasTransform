@@ -36,6 +36,15 @@ def load_shen_268(resolution: int) -> nibabel.Nifti1Image:
     return nibabel.load(atlas_path)
 
 
+def load_power() -> nibabel.Nifti1Image:
+    """
+    :return:
+    """
+    
+    atlas_path = os.path.join(__get_data_folder_path(), 'power_2011', 'power_5mm_atlas.nii.gz')
+    return nibabel.load(atlas_path)
+
+
 def load_craddock_2011(number_of_clusters: int, similarity_measure: str = 't', algorithm='2level') -> nibabel.Nifti1Image:
     """
     :param number_of_clusters: See the list of cluster sizes above or in volume_cluster_number.csv
