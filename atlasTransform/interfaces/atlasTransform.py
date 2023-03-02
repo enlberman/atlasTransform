@@ -13,7 +13,7 @@ import nilearn
 import nilearn.input_data
 import os
 from nipype.utils.filemanip import fname_presuffix
-from ..utils.atlas import load_craddock_2011, load_shen_268
+from ..utils.atlas import load_craddock_2011, load_shen_268, load_power
 
 LOGGER = logging.getLogger('nipype.interface')
 
@@ -66,6 +66,9 @@ class AtlasTransform(SimpleInterface):
         """Load the atlas and make the atlas name for the output file"""
         if self.inputs.atlas_name == 'shen':
             atlas = load_shen_268(resolution=self.inputs.resolution)
+            atlas_name = self.inputs.atlas_name
+        elif self.inputs.atlas_name == 'power':
+            atlas = load_power()
             atlas_name = self.inputs.atlas_name
         elif self.inputs.atlas_name == 'craddock':
             atlas = load_craddock_2011(
