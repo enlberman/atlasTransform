@@ -50,7 +50,7 @@ def get_parser():
     parser.add_argument('analysis_level', choices=['participant'],
                         help='processing stage to be run, only "participant" in the case of '
                              'atlasTransform (see BIDS-Apps specification).')
-    parser.add_argument('atlas_name', choices=['craddock', 'shen'],
+    parser.add_argument('atlas_name', choices=['craddock', 'shen', 'power'],
                         help='Which file format is the time series data coming from?')
     # optional arguments
     parser.add_argument('--resolution', choices=[1, 2],
