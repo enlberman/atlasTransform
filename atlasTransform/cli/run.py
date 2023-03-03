@@ -18,7 +18,7 @@ logger = logging.getLogger('cli')
 def main():
     """Entry point"""
     from .run_utils import get_workflow
-    import sentry_sdk
+    #import sentry_sdk
     from ..utils.bids import write_derivative_description
     if __name__ == 'main':
         set_start_method('forkserver')
@@ -37,14 +37,14 @@ def main():
                     process_crashfile(crashfile)
 
             if "Workflow did not execute cleanly" not in str(e):
-                sentry_sdk.capture_exception(e)
+                pass#sentry_sdk.capture_exception(e)
         logger.critical('atlasTransform failed: %s', e)
         raise
     else:
         errno = 0
         logger.log(25, 'atlasTransform finished without errors')
         if not opts.notrack:
-            sentry_sdk.capture_message('atlasTransform finished without errors',
+            pass#sentry_sdk.capture_message('atlasTransform finished without errors',
                                        level='info')
     # finally:
     #     from niworkflows.reports import generate_reports
