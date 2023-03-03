@@ -24,11 +24,8 @@ def check_deps(workflow):
 
 def get_parser():
     """Build parser object"""
-    from smriprep.cli.utils import ParseTemplates, output_space as _output_space
-    # from templateflow.api import templates
     from packaging.version import Version
     from ..__about__ import __version__
-    # from ..config import NONSTANDARD_REFERENCES
     from .version import check_latest, is_flagged
 
     verstr = 'atlasTransform v{}'.format(__version__)
