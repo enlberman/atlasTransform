@@ -10,7 +10,7 @@ from ..utils.atlas import CRADDOCK_CLUSTER_SIZES
 
 
 def _warn_redirect(message, category, filename, lineno, logger, file=None, line=None):
-    logger.warning('Captured warning (%s): %s', category, message)
+    pass#logger.warning('Captured warning (%s): %s', category, message)
 
 
 def check_deps(workflow):
