@@ -81,10 +81,12 @@ class AtlasTransform(SimpleInterface):
             self.inputs.nifti = self.inputs.nifti[0]
         source_img = nibabel.load(self.inputs.nifti)
         source_dimensions = len(source_img.shape)  # 4D or 3D
-
-        masker = nilearn.input_data.NiftiLabelsMasker(atlas)
-        roi_data = masker.fit_transform(source_img)
-
+        if not self.inputs.atlas_name == 'power':
+            masker = nilearn.input_data.NiftiLabelsMasker(atlas)
+            roi_data = masker.fit_transform(source_img)
+        else:
+            masker = nilearn.input_data.NiftiSpheresMasker(atlas, radius=15)
+            roi_data = masker.fit_transform(source_img)
         suffix = "_%s.csv" % atlas_name
         if source_dimensions == 4:
             suffix = suffix.replace('.csv', '_ts.csv')  # 4D images get the ts suffix for time-series

@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 
 import nibabel
+import numpy
 from nipype import logging
 
 LOGGER = logging.getLogger('nipype.interface')
@@ -36,13 +37,13 @@ def load_shen_268(resolution: int) -> nibabel.Nifti1Image:
     return nibabel.load(atlas_path)
 
 
-def load_power() -> nibabel.Nifti1Image:
+def load_power() -> list:
     """
     :return:
     """
     
-    atlas_path = os.path.join(__get_data_folder_path(), 'power_2011', 'power_5mm_atlas.nii.gz')
-    return nibabel.load(atlas_path)
+    atlas_path = os.path.join(__get_data_folder_path(), 'power_2011', 'power_coords.npy')
+    return numpy.load(atlas_path,allow_pickle=True).tolist()
 
 
 def load_craddock_2011(number_of_clusters: int, similarity_measure: str = 't', algorithm='2level') -> nibabel.Nifti1Image:
