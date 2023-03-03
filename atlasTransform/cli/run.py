@@ -45,7 +45,7 @@ def main():
         logger.log(25, 'atlasTransform finished without errors')
         if not opts.notrack:
             pass#sentry_sdk.capture_message('atlasTransform finished without errors',
-                                       level='info')
+                   #                    level='info')
     # finally:
     #     from niworkflows.reports import generate_reports
     #     from subprocess import check_call, CalledProcessError, TimeoutExpired
