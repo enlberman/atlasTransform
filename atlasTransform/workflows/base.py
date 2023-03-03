@@ -1,26 +1,18 @@
 from argparse import ArgumentParser
 from bids import BIDSLayout
 from nipype import Workflow
-import sys
 import os
 from copy import deepcopy
-from niworkflows.utils.misc import fix_multi_T1w_source_name
 
 from nipype import __version__ as nipype_ver
 from nipype.pipeline import engine as pe
 from nipype.interfaces import utility as niu
 
 from niworkflows.engine.workflows import LiterateWorkflow as Workflow
-from niworkflows.interfaces.bids import (
-    BIDSInfo
-)
-
-from ..workflows.datasink import init_datasink_wf
-from ..utils.bids import collect_data, BIDSPlusDataGrabber
+from ..utils.bids import collect_data
 
 from ..workflows.atlasTransformWorkflow import init_atlas_transform_workflow
 
-from ..interfaces import SubjectSummary, AboutSummary, DerivativesDataSink
 from ..__about__ import __version__
 
 

@@ -4,9 +4,9 @@
 
 # Load modules for compatibility
 from niworkflows.interfaces import (
-    bids, utils)
+    bids)#, utils)
 
-from .reports import SubjectSummary, AboutSummary
+
 from .atlasTransform import AtlasTransform
 
 
@@ -16,9 +16,7 @@ class DerivativesDataSink(bids.DerivativesDataSink):
 
 __all__ = [
     'bids',
-    'utils',
-    'SubjectSummary',
-    'AboutSummary',
+  #  'utils',
     'DerivativesDataSink',
     'AtlasTransform'
 ]

@@ -6,7 +6,7 @@
 Utilities to handle BIDS inputs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 """
-import glob
+
 import os
 import sys
 import json

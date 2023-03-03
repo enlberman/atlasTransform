@@ -162,10 +162,7 @@ def get_workflow(logger):
 
     sentry_sdk = None
     if not opts.notrack:
-        import sentry_sdk
-        from ..utils.sentry import sentry_setup
-        sentry_setup(opts, exec_env)
-
+        pass
     # Validate inputs
     if not opts.skip_bids_validation:
         print("Making sure the input data is BIDS compliant (warnings can be ignored in most "
@@ -222,7 +219,6 @@ def get_workflow(logger):
 
     # Sentry tracking
     if not opts.notrack:
-        from ..utils.sentry import start_ping
-        start_ping(run_uuid, len(subject_list))
+        pass
 
     return atlas_transform_wf, plugin_settings, opts, output_dir, work_dir, bids_dir, subject_list, run_uuid

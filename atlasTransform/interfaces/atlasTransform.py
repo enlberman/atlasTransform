@@ -1,12 +1,9 @@
-from functools import partial
 from pathlib import Path
 
 from nipype.interfaces.base import (
-    traits, TraitedSpec, BaseInterfaceInputSpec, SimpleInterface,
-    File, InputMultiPath, OutputMultiPath)
+    traits, TraitedSpec, SimpleInterface,
+    File)
 from nipype import logging
-from python_fractal_scaling.dfa import dfa
-import pandas
 import numpy
 import nibabel
 import nilearn

@@ -7,7 +7,6 @@ fractal scaling calculation workflow
 """
 
 import logging
-import sys
 from multiprocessing import set_start_method
 
 logging.addLevelName(25, 'IMPORTANT')  # Add a new level between INFO and WARNING
@@ -18,8 +17,6 @@ logger = logging.getLogger('cli')
 def main():
     """Entry point"""
     from .run_utils import get_workflow
-    #import sentry_sdk
-    from ..utils.bids import write_derivative_description
     if __name__ == 'main':
         set_start_method('forkserver')
     errno = 1  # Default is error exit unless otherwise set
@@ -29,15 +26,7 @@ def main():
         workflow.run(**plugin_settings)
     except Exception as e:
         if not opts.notrack:
-            from ..utils.sentry import process_crashfile
-            crashfolders = [output_dir / 'atlasTransform' / 'sub-{}'.format(s) / 'log' / run_uuid
-                            for s in subject_list]
-            for crashfolder in crashfolders:
-                for crashfile in crashfolder.glob('crash*.*'):
-                    process_crashfile(crashfile)
-
-            if "Workflow did not execute cleanly" not in str(e):
-                pass#sentry_sdk.capture_exception(e)
+            pass
         logger.critical('atlasTransform failed: %s', e)
         raise
     else:
