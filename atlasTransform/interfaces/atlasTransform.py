@@ -85,7 +85,7 @@ class AtlasTransform(SimpleInterface):
             masker = nilearn.input_data.NiftiLabelsMasker(atlas)
             roi_data = masker.fit_transform(source_img)
         else:
-            masker = nilearn.input_data.NiftiSpheresMasker(atlas, radius=15)
+            masker = nilearn.input_data.NiftiSpheresMasker(atlas, radius=15, allow_overlap=True)
             roi_data = masker.fit_transform(source_img)
         suffix = "_%s.csv" % atlas_name
         if source_dimensions == 4:
