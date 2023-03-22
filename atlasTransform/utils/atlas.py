@@ -44,7 +44,9 @@ def load_power() -> list:
     
     atlas_path = os.path.join(__get_data_folder_path(), 'power_2011', 'power_order.npy')
     atlas =  numpy.load(atlas_path,allow_pickle=True).tolist()
-    return [numpy.array(x.split(',')).astype(int) for x in atlas]
+    coords = [numpy.array(x.split(',')).astype(int) for x in atlas]
+    coords = [numpy.array([-x[0],x[1],x[2]]) for x in coords]
+    return coords
 
 
 def load_craddock_2011(number_of_clusters: int, similarity_measure: str = 't', algorithm='2level') -> nibabel.Nifti1Image:
