@@ -47,7 +47,8 @@ def _roi_error_propagation(img_list_atlas_space, atlas_data, j):
     then dX = sqrt(sum(dx_i**2))/n, i=1,...,n
     """
     return [
-        numpy.sqrt(numpy.power(img_list_atlas_space[i].get_data() * (atlas_data == j), 2.0).sum()) / float(sum(atlas_data == j))
+        numpy.sqrt(numpy.power(img_list_atlas_space[i].get_data() * (atlas_data == j), 2.0).sum()) / float(
+            sum(atlas_data == j))
         for i in range(len(img_list_atlas_space))
     ]
 
@@ -85,13 +86,16 @@ class AtlasTransform(SimpleInterface):
             masker = nilearn.input_data.NiftiLabelsMasker(atlas)
             roi_data = masker.fit_transform(source_img)
         else:
-            masker = nilearn.input_data.NiftiSpheresMasker(atlas, radius=15, allow_overlap=True,smoothing_fwhm=6)
+            tr = source_img.header.get('pixdim')[4]
+            masker = nilearn.input_data.NiftiSpheresMasker(atlas, detrend=True, standardize=True,
+                                                           low_pass=0.08, high_pass=0.009, smoothing_fwhm=6, t_r=tr)
             roi_data = masker.fit_transform(source_img)
         suffix = "_%s.csv" % atlas_name
         if source_dimensions == 4:
             suffix = suffix.replace('.csv', '_ts.csv')  # 4D images get the ts suffix for time-series
 
-        out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(Path(self.inputs.bids_dir).stem,  __name__.split('.')[0])
+        out_file = fname_presuffix(self.inputs.nifti, suffix=suffix, use_ext=False).replace(
+            Path(self.inputs.bids_dir).stem, __name__.split('.')[0])
         os.makedirs(Path(out_file).parent, exist_ok=True)
         numpy.savetxt(out_file, roi_data, delimiter=',')
 
